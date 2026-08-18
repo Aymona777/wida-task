@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HORIZON × WIDA | Cyber-Executive AI Ingestion & Governance Studio</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome 6 Pro Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Anime.js CDN for Silky Micro-Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+  <!-- Custom Luxury Stylesheet (Cyber-Executive v6.0) -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-[#05060A] text-[#F8FAFC] min-h-screen flex flex-col font-sans selection:bg-cyan-500/30 selection:text-white">
+
+  <!-- Cyber Atmosphere & Matrix Background Grid -->
+  <div class="cyber-canvas-background"></div>
+  <div class="matrix-grid"></div>
+
+  <!-- ========================================================================= -->
+  <!-- EXECUTIVE TOP NAVIGATION BAR -->
+  <!-- ========================================================================= -->
+  <header class="executive-header-v6 sticky top-0 z-40 px-4 sm:px-8 py-3.5">
+    <div class="max-w-[1680px] mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Brand Identity -->
+      <div class="flex items-center gap-8">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-black text-xl tracking-wider text-white font-['Syne',sans-serif]">HORIZON</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-medium hidden md:block">منظومة معالجة وتصنيف طلبات الأعمال وحوكمة الامتثال</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="hidden xl:flex items-center gap-1.5 bg-[#0B0D14] p-1 rounded-xl border border-white/10">
+          <button data-tab="ingestion" onclick="switchTab('ingestion')" class="brand-tab-btn active">
+            <i class="fa-solid fa-wand-magic-sparkles text-xs text-cyan-400"></i>
+            <span>استوديو المعالجة الذكي</span>
+          </button>
+          <button data-tab="dashboard" onclick="switchTab('dashboard')" class="brand-tab-btn">
+            <i class="fa-solid fa-chart-pie text-xs text-amber-400"></i>
+            <span>لوحة المؤشرات</span>
+          </button>
+          <button data-tab="review" onclick="switchTab('review')" class="brand-tab-btn">
+            <i class="fa-solid fa-user-check text-xs text-emerald-400"></i>
+            <span>المراجعة البشرية (HITL)</span>
+            <span id="pending-review-count" class="px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold border border-amber-500/30">0</span>
+          </button>
+          <button data-tab="database" onclick="switchTab('database')" class="brand-tab-btn">
+            <i class="fa-solid fa-database text-xs text-indigo-400"></i>
+            <span>سجل الطلبات</span>
+          </button>
+          <button data-tab="catalog" onclick="switchTab('catalog')" class="brand-tab-btn">
+            <i class="fa-solid fa-book-bookmark text-xs text-teal-400"></i>
+            <span>الدليل والسياسات</span>
+          </button>
+          <button data-tab="tests" onclick="switchTab('tests')" class="brand-tab-btn">
+            <i class="fa-solid fa-circle-check text-xs text-emerald-400"></i>
+            <span>الاختبارات المعيارية</span>
+          </button>
+          <button data-tab="chat" onclick="switchTab('chat')" class="brand-tab-btn">
+            <i class="fa-solid fa-robot text-xs text-pink-400"></i>
+            <span>مساعد DeepSeek V4</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Action Tools -->
+      <div class="flex items-center gap-3">
+        <!-- Live Radar Heartbeat -->
+        <div class="hidden lg:flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-[#0B0D14] border border-white/10 text-xs font-medium text-slate-300 shadow-inner">
+          <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+          <span class="font-mono text-[11px] text-emerald-400 font-bold">DEEPSEEK V4 FLASH: ACTIVE</span>
+        </div>
+
+        <!-- Language Toggle -->
+        <button id="btn-toggle-lang" onclick="toggleLanguage()" class="btn-glass-secondary text-xs py-2 px-3.5">
+          <i class="fa-solid fa-globe text-cyan-400"></i>
+          <span>English</span>
+        </button>
+
+        <!-- Export Dropdown -->
+        <div class="relative group">
+          <button class="btn-glass-secondary text-xs py-2 px-3.5">
+            <i class="fa-solid fa-file-export text-amber-400"></i>
+            <span>تصدير</span>
+            <i class="fa-solid fa-chevron-down text-[9px] text-slate-400"></i>
+          </button>
+          <div class="absolute left-0 mt-2 w-48 bg-[#10131E] rounded-xl shadow-2xl border border-white/15 py-1.5 hidden group-hover:block z-50 text-slate-200 text-xs">
+            <a href="/api/export/excel" class="flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-white/10 font-bold text-emerald-400 transition">
+              <i class="fa-solid fa-file-excel"></i> Excel (.xlsx) ملون
+            </a>
+            <a href="/api/export/csv" class="flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-white/10 font-bold text-slate-200 transition">
+              <i class="fa-solid fa-file-csv"></i> CSV (UTF-8 BOM)
+            </a>
+            <a href="/api/export/json" class="flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-white/10 font-bold text-pink-400 transition">
+              <i class="fa-solid fa-code"></i> JSON Data Stream
+            </a>
+          </div>
+        </div>
+
+        <!-- Reset Button -->
+        <button id="btn-reset-samples" onclick="handleResetSamples()" title="إعادة تهيئة البيانات" class="btn-glass-secondary p-2.5">
+          <i class="fa-solid fa-rotate-left text-slate-400 hover:text-white"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN CYBER WORKSPACE -->
+  <!-- ========================================================================= -->
+  <main class="max-w-[1680px] w-full mx-auto px-4 sm:px-8 py-6 flex-1 relative z-10">
+
+    <!-- ========================================================================= -->
+    <!-- TAB 1: INGESTION STUDIO WORKBENCH (EXECUTIVE SHOWCASE) -->
+    <!-- ========================================================================= -->
+    <section id="tab-ingestion" class="tab-content-section space-y-6">
+      
+      <!-- Top Benchmark Cards (5 Official Benchmark Cases) -->
+      <div id="sample-buttons-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- 2-Column High-Craft Executive Studio Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Input, File Parser & Actions (5 cols) -->
+        <div class="lg:col-span-5 space-y-5">
+          
+          <div class="spotlight-card p-6 space-y-5">
+            
+            <div class="flex items-center justify-between pb-3.5 border-b border-white/10">
+              <label for="input-request-text" class="text-xs font-extrabold text-white flex items-center gap-2 uppercase tracking-wider">
+                <i class="fa-solid fa-terminal text-cyan-400"></i>
+                <span>نص طلب العميل الوارد</span>
+              </label>
+              <div class="flex items-center gap-3">
+                <span id="char-count-badge" class="text-xs font-mono text-slate-400">0 حرف</span>
+                <button id="btn-clear-input" class="text-xs text-slate-400 hover:text-rose-400 transition font-semibold cursor-pointer">
+                  <i class="fa-solid fa-trash-can"></i> مسح
+                </button>
+              </div>
+            </div>
+
+            <textarea
+              id="input-request-text"
+              rows="12"
+              placeholder="اكتب أو الصق نص طلب العميل هنا..."
+              class="w-full p-4 text-xs leading-relaxed font-sans resize-y min-h-[260px]"
+            ></textarea>
+
+            <!-- Multi-Format Dropzone -->
+            <div
+              id="file-drop-zone"
+              class="border-2 border-dashed border-white/15 rounded-xl p-4 text-center hover:border-cyan-400 hover:bg-white/5 transition cursor-pointer flex items-center justify-center gap-3.5"
+              onclick="document.getElementById('file-upload-input').click()"
+            >
+              <input type="file" id="file-upload-input" class="hidden" accept=".txt,.pdf,.docx,.doc,.json,.csv">
+              <div class="w-9 h-9 rounded-xl bg-white/10 text-cyan-400 flex items-center justify-center text-base">
+                <i class="fa-solid fa-file-arrow-up"></i>
+              </div>
+              <div class="text-start">
+                <div class="font-bold text-xs text-white">إرفاق مستند العميل (PDF, DOCX, TXT, JSON)</div>
+                <div class="text-[11px] text-slate-400">استخراج ومعالجة فورية للمحتوى والكيانات</div>
+              </div>
+            </div>
+
+            <!-- Execution Action -->
+            <div class="pt-3 border-t border-white/10 flex items-center justify-between gap-3">
+              <div class="text-xs text-slate-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                <span>فحص آلي لـ 8 سياسات</span>
+              </div>
+              <button
+                id="btn-process-request"
+                onclick="handleProcessSubmit()"
+                class="btn-executive-gold cursor-pointer"
+              >
+                <span>معالجة بالذكاء الاصطناعي</span>
+                <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Right Column: AI Extraction & Hologram Output (7 cols) -->
+        <div class="lg:col-span-7 space-y-5">
+          
+          <!-- Structured Diagnostics Card -->
+          <div class="spotlight-card p-6 space-y-4">
+            
+            <div class="flex items-center justify-between pb-3.5 border-b border-white/10">
+              <div class="flex items-center gap-2.5">
+                <span class="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_12px_#00FF87]"></span>
+                <h3 class="font-bold text-sm text-white">نتائج الاستخراج والتحليل الذكي</h3>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="res-confidence-badge" class="telemetry-chip chip-compliant text-xs">98% دقة</span>
+                <span id="res-request-code" class="px-2.5 py-1 rounded bg-white/10 text-slate-200 font-mono text-xs font-bold">REQ-NEW</span>
+              </div>
+            </div>
+
+            <!-- Extracted Entities Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="p-3.5 bg-[#080A10] rounded-xl border border-white/5 space-y-1">
+                <div class="text-slate-400 font-medium">اسم الجهة الطالبة:</div>
+                <div id="res-org-name" class="font-bold text-white text-sm">-</div>
+              </div>
+
+              <div class="p-3.5 bg-[#080A10] rounded-xl border border-white/5 space-y-1">
+                <div class="text-slate-400 font-medium">مسؤول التواصل والصفة:</div>
+                <div class="font-bold text-white text-sm">
+                  <span id="res-contact-person">-</span>
+                  <span id="res-contact-title" class="text-slate-400 font-normal text-xs ml-1"></span>
+                </div>
+              </div>
+
+              <div class="p-3.5 bg-[#080A10] rounded-xl border border-white/5 space-y-1">
+                <div class="text-slate-400 font-medium">وسيلة الاتصال:</div>
+                <div id="res-contact-channel" class="font-bold text-slate-200 font-mono text-xs">-</div>
+              </div>
+
+              <div class="p-3.5 bg-[#080A10] rounded-xl border border-white/5 space-y-1">
+                <div class="text-slate-400 font-medium">السجل التجاري (سياسة 1):</div>
+                <span id="res-cr-status" class="telemetry-chip chip-compliant">-</span>
+              </div>
+            </div>
+
+            <!-- Service Classification Banner -->
+            <div class="p-4 bg-[#141826] rounded-xl border border-white/10 flex items-center justify-between flex-wrap gap-2 text-xs">
+              <div>
+                <div class="text-slate-400 font-bold text-[11px] mb-0.5">الخدمة الأساسية المطابقة (من 8 خدمات):</div>
+                <div id="res-primary-service" class="font-extrabold text-white text-sm text-cyan-300">-</div>
+              </div>
+              <div class="text-end">
+                <div class="text-slate-400 font-medium text-[11px] mb-0.5">الخدمة الثانوية (سياسة 6):</div>
+                <div id="res-secondary-service" class="font-bold text-slate-200">-</div>
+              </div>
+            </div>
+
+            <!-- Policy Evaluation -->
+            <div class="p-4 bg-[#080A10] rounded-xl border border-white/5 space-y-2.5 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-300">تقييم الامتثال والسياسات:</span>
+                <span id="res-policy-status" class="telemetry-chip chip-compliant">متوافق</span>
+              </div>
+              <div class="flex items-center justify-between text-slate-300">
+                <span>الموعد المطلوب للتنفيذ:</span>
+                <span id="res-deadline" class="font-bold text-white">-</span>
+              </div>
+              <div id="res-missing-list" class="flex flex-wrap gap-1.5 pt-1">
+                <!-- Missing fields tags -->
+              </div>
+              <div id="res-alerts-list" class="space-y-1.5 pt-1">
+                <!-- Alerts list -->
+              </div>
+            </div>
+
+            <!-- Recommended Next Step -->
+            <div class="p-3.5 bg-emerald-950/30 border border-emerald-500/30 rounded-xl text-xs text-emerald-300 flex items-start gap-2.5">
+              <i class="fa-solid fa-circle-check mt-0.5 text-emerald-400 text-sm"></i>
+              <div>
+                <span class="font-bold">الخطوة التالية المعتمدة:</span>
+                <span id="res-next-step" class="font-medium">-</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Standardized Summary Hologram & Customer Draft -->
+          <div class="spotlight-card p-6 space-y-4">
+            
+            <div class="flex items-center justify-between pb-3.5 border-b border-white/10">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-file-contract text-cyan-400"></i>
+                <h4 class="font-bold text-sm text-white">النموذج الموحد ومسودة الرد على العميل</h4>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <button id="btn-copy-summary" class="btn-glass-secondary text-xs py-1.5 px-3.5 cursor-pointer">
+                  <i class="fa-solid fa-copy text-cyan-400"></i> نسخ الملخص
+                </button>
+                <button id="btn-open-review-workbench" class="btn-executive-gold text-xs py-1.5 px-4 cursor-pointer">
+                  <i class="fa-solid fa-user-check"></i> فتح منصة المراجعة
+                </button>
+              </div>
+            </div>
+
+            <!-- Standardized Summary Monospace -->
+            <div>
+              <div class="text-xs font-bold text-slate-400 mb-1.5">نموذج الملخص الداخلي الموحد (04_Output_Template):</div>
+              <pre id="res-internal-summary" class="hologram-briefing-box max-h-56 leading-relaxed"></pre>
+            </div>
+
+            <!-- Customer Draft Reply -->
+            <div class="pt-3 border-t border-white/10 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                  <i class="fa-solid fa-envelope text-emerald-400"></i> مسودة الرد المعتمدة للعميل:
+                </span>
+                <button id="btn-copy-reply" class="text-xs text-slate-400 hover:text-white font-medium cursor-pointer">
+                  <i class="fa-solid fa-copy"></i> نسخ مسودة الرد
+                </button>
+              </div>
+              <div class="p-4 bg-[#080A10] rounded-xl border border-white/5 text-xs text-slate-200 leading-relaxed max-h-44 overflow-y-auto">
+                <div id="res-customer-subject" class="font-bold text-white mb-2 pb-1.5 border-b border-white/10 text-cyan-300"></div>
+                <div id="res-customer-body" class="whitespace-pre-line text-slate-300"></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 2: EXECUTIVE ANALYTICS DASHBOARD -->
+    <!-- ========================================================================= -->
+    <section id="tab-dashboard" class="tab-content-section hidden space-y-6">
+      
+      <!-- KPI Bento Matrix -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="spotlight-card p-5">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1" data-i18n="kpi_total">إجمالي الطلبات</div>
+          <div id="kpi-total-requests" class="text-3xl font-black text-white font-mono">0</div>
+          <div class="text-xs text-slate-500 mt-1">سجلات قاعدة البيانات</div>
+        </div>
+
+        <div class="spotlight-card p-5">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1" data-i18n="kpi_pending">بانتظار المراجعة</div>
+          <div id="kpi-pending-review" class="text-3xl font-black text-amber-400 font-mono">0</div>
+          <div class="text-xs text-amber-500/80 mt-1">تطبيق السياسة 8 الإلزامية</div>
+        </div>
+
+        <div class="spotlight-card p-5">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1" data-i18n="kpi_approved">الطلبات المعتمدة</div>
+          <div id="kpi-approved-requests" class="text-3xl font-black text-emerald-400 font-mono">0</div>
+          <div class="text-xs text-emerald-500/80 mt-1">جاهزة للتنفيذ الرسمي</div>
+        </div>
+
+        <div class="spotlight-card p-5">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1" data-i18n="kpi_compliance">نسبة الامتثال</div>
+          <div id="kpi-compliance-rate" class="text-3xl font-black text-cyan-400 font-mono">100%</div>
+          <div class="text-xs text-cyan-500/80 mt-1">مؤشر السلامة التشغيلية</div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="spotlight-card p-6 lg:col-span-2">
+          <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-4">توزيع الطلبات على دليل الخدمات (8 خدمات معتمدة)</h3>
+          <div class="h-64 w-full relative">
+            <canvas id="serviceDistChart"></canvas>
+          </div>
+        </div>
+
+        <div class="spotlight-card p-6">
+          <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-4">حالات الامتثال والسياسات</h3>
+          <div class="h-64 w-full relative">
+            <canvas id="policyDistChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 3: HUMAN-IN-THE-LOOP (HITL) REVIEW WORKBENCH -->
+    <!-- ========================================================================= -->
+    <section id="tab-review" class="tab-content-section hidden space-y-6">
+      
+      <div class="spotlight-card p-6">
+        <div class="flex items-center justify-between pb-4 border-b border-white/10">
+          <div>
+            <h2 class="text-base font-bold text-white" data-i18n="nav_review">طابور المراجعة البشرية والاعتماد (HITL)</h2>
+            <p class="text-xs text-slate-400">تطبيق السياسة 8: اعتماد ومطابقة مخرجات النظام الآلي قبل الإرسال الرسمي للعميل</p>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <div id="review-queue-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 4: DATABASE REPOSITORY -->
+    <!-- ========================================================================= -->
+    <section id="tab-database" class="tab-content-section hidden space-y-6">
+      
+      <div class="spotlight-card p-6 space-y-4">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+          <div>
+            <h2 class="text-base font-bold text-white" data-i18n="nav_database">سجل وقاعدة بيانات الطلبات</h2>
+            <p class="text-xs text-slate-400">مستودع SQLite دائم مع إمكانية التصدير اللحظي والبحث الفوري</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <a href="/api/export/excel" class="btn-glass-secondary text-xs text-emerald-400 font-bold">
+              <i class="fa-solid fa-file-excel"></i> Excel (.xlsx)
+            </a>
+            <a href="/api/export/csv" class="btn-glass-secondary text-xs font-bold">
+              <i class="fa-solid fa-file-csv"></i> CSV
+            </a>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <input type="text" id="db-search-input" placeholder="البحث بالجهة، المسؤول، الرمز..." class="w-full p-2.5 text-xs">
+          
+          <select id="db-filter-status" class="w-full p-2.5 text-xs font-medium">
+            <option value="">جميع حالات المراجعة</option>
+            <option value="بانتظار المراجعة">بانتظار المراجعة</option>
+            <option value="تمت المراجعة والاعتماد">تمت المراجعة والاعتماد</option>
+            <option value="طلب استيضاح">طلب استيضاح</option>
+            <option value="مرفوض / خارج النطاق">مرفوض / خارج النطاق</option>
+          </select>
+
+          <select id="db-filter-policy" class="w-full p-2.5 text-xs font-medium">
+            <option value="">جميع حالات السياسات</option>
+            <option value="متوافق">متوافق</option>
+            <option value="عاجل ويتطلب موافقة">عاجل ويتطلب موافقة</option>
+            <option value="مخالف">مخالف</option>
+            <option value="خارج النطاق">خارج النطاق</option>
+          </select>
+
+          <button onclick="fetchRequests()" class="btn-glass-secondary text-xs justify-center cursor-pointer">
+            <i class="fa-solid fa-arrows-rotate"></i> تحديث السجلات
+          </button>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto rounded-xl border border-white/10 mt-2">
+          <table class="w-full text-start text-xs">
+            <thead class="bg-[#05060A] text-slate-400 font-bold border-b border-white/10">
+              <tr>
+                <th class="p-3.5">رمز الطلب</th>
+                <th class="p-3.5">الجهة ومسؤول التواصل</th>
+                <th class="p-3.5">الخدمة المطابقة</th>
+                <th class="p-3.5">تقييم السياسة</th>
+                <th class="p-3.5">حالة المراجعة</th>
+                <th class="p-3.5">التاريخ</th>
+                <th class="p-3.5 text-center">الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="requests-table-body" class="divide-y divide-white/5 bg-[#0B0D14] font-medium">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 5: CATALOG & POLICIES DIRECTORY -->
+    <!-- ========================================================================= -->
+    <section id="tab-catalog" class="tab-content-section hidden space-y-6">
+      
+      <div class="spotlight-card p-6">
+        <h2 class="text-base font-bold text-white mb-1">دليل الخدمات الثمانية المعتمدة (02_Service_Catalog)</h2>
+        <p class="text-xs text-slate-400 mb-5">النطاقات المعتمدة والمدد الزمنية القياسية والاستثناءات</p>
+
+        <div id="catalog-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <div class="spotlight-card p-6">
+        <h2 class="text-base font-bold text-white mb-1">سياسات التشغيل وضوابط الامتثال (03_Operating_Policies)</h2>
+        <p class="text-xs text-slate-400 mb-5">ضوابط السجل التجاري والمدد الزمنية والحوكمة</p>
+
+        <div id="policies-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 6: BENCHMARK TEST SUITE -->
+    <!-- ========================================================================= -->
+    <section id="tab-tests" class="tab-content-section hidden space-y-6">
+      
+      <div class="spotlight-card p-6">
+        <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
+          <div>
+            <h2 class="text-base font-bold text-white">جناح الاختبارات المعيارية الآلية</h2>
+            <p class="text-xs text-slate-400">تنفيذ 11 فحصاً معيارياً شاملاً لطلبات A إلى E والحالات الحدية</p>
+          </div>
+          <button id="btn-run-tests" onclick="handleRunTests()" class="btn-executive-gold text-xs py-2.5 px-5 cursor-pointer">
+            <i class="fa-solid fa-play"></i> تشغيل 11 فحصاً الآن
+          </button>
+        </div>
+
+        <div id="test-results-container">
+          <div class="p-10 text-center bg-[#05060A] rounded-xl border border-white/10 text-xs text-slate-400">
+            انقر الزر أعلاه لتشغيل الاختبارات والتحقق من صحة الاستخراج ومطابقة السياسات.
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 7: DEEPSEEK AI ASSISTANT -->
+    <!-- ========================================================================= -->
+    <section id="tab-chat" class="tab-content-section hidden space-y-6">
+      
+      <div class="spotlight-card p-6 space-y-4">
+        <div class="flex items-center justify-between pb-4 border-b border-white/10">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-pink-600/30 text-pink-400 flex items-center justify-center text-lg border border-pink-500/40 shadow-lg shadow-pink-500/10">
+              <i class="fa-solid fa-robot"></i>
+            </div>
+            <div>
+              <h2 class="text-base font-bold text-white">المساعد الاستشاري (DeepSeek V4 Flash)</h2>
+              <p class="text-xs text-slate-400">استفسر عن أي طلب أو سياسة تشغيلية بدقة مطلقة</p>
+            </div>
+          </div>
+          <button onclick="clearChatHistory()" class="btn-glass-secondary text-xs py-1.5 px-3">
+            <i class="fa-solid fa-broom"></i> مسح المحادثة
+          </button>
+        </div>
+
+        <!-- Quick Prompts -->
+        <div class="flex flex-wrap gap-2 pt-1">
+          <button onclick="sendQuickPrompt('ما هي شروط قبول طلبات الاستشارات الإدارية؟')" class="px-3 py-1.5 bg-[#0B0D14] hover:bg-[#141826] text-slate-300 text-xs rounded-lg border border-white/10 transition cursor-pointer">
+            ✦ شروط الاستشارات الإدارية
+          </button>
+          <button onclick="sendQuickPrompt('لماذا يُرفض التسويق الرقمي وإدارة حسابات التواصل الاجتماعي؟')" class="px-3 py-1.5 bg-[#0B0D14] hover:bg-[#141826] text-slate-300 text-xs rounded-lg border border-white/10 transition cursor-pointer">
+            ✦ سياسة الخدمات خارج النطاق
+          </button>
+          <button onclick="sendQuickPrompt('كيف يتم التعامل مع طلبات التنفيذ العاجلة وموافقة COO؟')" class="px-3 py-1.5 bg-[#0B0D14] hover:bg-[#141826] text-slate-300 text-xs rounded-lg border border-white/10 transition cursor-pointer">
+            ✦ شروط الطلبات العاجلة
+          </button>
+        </div>
+
+        <!-- Message Container -->
+        <div id="chat-messages-container" class="p-4 bg-[#05060A] rounded-xl border border-white/10 min-h-[380px] max-h-[520px] overflow-y-auto space-y-3 text-xs">
+          <!-- Populated dynamically -->
+        </div>
+
+        <!-- Chat Input -->
+        <div class="flex gap-2.5">
+          <input
+            type="text"
+            id="chat-user-input"
+            placeholder="اكتب استفسارك هنا (اضغط Enter للإرسال)..."
+            class="flex-1 p-3 text-xs"
+            onkeydown="if(event.key==='Enter') sendChatMessage()"
+          >
+          <button onclick="sendChatMessage()" class="btn-executive-gold text-xs py-3 px-6 cursor-pointer">
+            <span>إرسال</span>
+            <i class="fa-solid fa-paper-plane text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- TELEMETRY FOOTER -->
+  <!-- ========================================================================= -->
+  <footer class="bg-[#0B0D14] border-t border-white/10 py-3 px-4 sm:px-8">
+    <div class="max-w-[1680px] mx-auto flex items-center justify-between flex-wrap gap-2 text-xs font-mono">
+      <div class="flex items-center gap-4 text-slate-400">
+        <span class="text-white font-bold">HORIZON</span>
+        <span>•</span>
+        <span class="text-cyan-400">DeepSeek-V4-Flash</span>
+        <span>•</span>
+        <span>Data Store: SQLite WAL</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-emerald-400 font-bold">Zero Hallucination: ACTIVE</span>
+        <span>•</span>
+        <span class="text-slate-400">Policy Governance: 100% PASS</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- REVIEW WORKBENCH MODAL -->
+  <!-- ========================================================================= -->
+  <div id="review-workbench-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 hidden fade-in-v6">
+    <div class="bg-[#0B0D14] rounded-2xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden border border-white/15">
+      
+      <div class="px-6 py-4 bg-[#10131E] text-white flex items-center justify-between border-b border-white/10">
+        <div class="flex items-center gap-3">
+          <span class="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_10px_#00FF87]"></span>
+          <h3 class="font-bold text-sm">منصة المراجعة البشرية والاعتماد (HITL)</h3>
+          <span id="modal-req-code" class="px-2.5 py-0.5 rounded bg-white/10 text-slate-200 font-mono text-xs font-bold">REQ-0000</span>
+        </div>
+        <button onclick="closeReviewModal()" class="text-slate-400 hover:text-white p-1 cursor-pointer">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 bg-[#0B0D14] text-xs">
+        <!-- Left Column -->
+        <div class="space-y-4">
+          <div class="p-4 bg-[#05060A] rounded-xl border border-white/10">
+            <div class="font-bold text-white mb-1.5">طلب العميل الأصلي:</div>
+            <div id="modal-raw-text" class="whitespace-pre-wrap text-slate-300 text-xs leading-relaxed max-h-44 overflow-y-auto"></div>
+          </div>
+
+          <div class="p-4 bg-[#05060A] rounded-xl border border-white/10">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-bold text-white">مسودة الرد للعميل (قابلة للتعديل):</span>
+              <button onclick="handleDispatchEmail()" class="btn-executive-gold text-xs py-1 px-3">
+                <i class="fa-solid fa-paper-plane"></i> إرسال رسمي
+              </button>
+            </div>
+            <textarea id="modal-customer-body" rows="6" class="w-full p-2.5 text-xs leading-relaxed"></textarea>
+          </div>
+
+          <div class="p-4 bg-[#05060A] rounded-xl border border-white/10">
+            <div class="font-bold text-white mb-2">سجل التدقيق (Audit Trail):</div>
+            <div id="modal-audit-timeline" class="max-h-32 overflow-y-auto space-y-2"></div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="space-y-3 p-5 bg-[#10131E] rounded-xl border border-white/10">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-300 mb-1 text-xs">اسم الجهة:</label>
+              <input type="text" id="edit-org-name" class="w-full p-2 text-xs">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-300 mb-1 text-xs">مسؤول التواصل:</label>
+              <input type="text" id="edit-contact-person" class="w-full p-2 text-xs">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-300 mb-1 text-xs">الصفة:</label>
+              <input type="text" id="edit-contact-title" class="w-full p-2 text-xs">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-300 mb-1 text-xs">وسيلة الاتصال:</label>
+              <input type="text" id="edit-contact-channel" class="w-full p-2 text-xs">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-300 mb-1 text-xs">السجل التجاري:</label>
+              <select id="edit-cr-status" class="w-full p-2 text-xs font-bold">
+                <option value="متوفر">متوفر</option>
+                <option value="غير متوفر">غير متوفر</option>
+                <option value="غير واضح">غير واضح</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-300 mb-1 text-xs">تقييم السياسة:</label>
+              <select id="edit-policy-status" class="w-full p-2 text-xs font-bold">
+                <option value="متوافق">متوافق</option>
+                <option value="عاجل ويتطلب موافقة">عاجل ويتطلب موافقة</option>
+                <option value="مخالف">مخالف</option>
+                <option value="خارج النطاق">خارج النطاق</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-300 mb-1 text-xs">الخدمة الأساسية:</label>
+            <select id="edit-primary-service" class="w-full p-2 text-xs font-bold"></select>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-300 mb-1 text-xs">الخدمة الثانوية:</label>
+            <select id="edit-secondary-service" class="w-full p-2 text-xs"></select>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-300 mb-1 text-xs">الموعد المطلوب:</label>
+            <input type="text" id="edit-deadline" class="w-full p-2 text-xs">
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-300 mb-1 text-xs">اسم المراجع المعتمد:</label>
+            <input type="text" id="edit-reviewer-name" class="w-full p-2 text-xs font-bold text-cyan-300">
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-300 mb-1 text-xs">ملاحظات الاعتماد:</label>
+            <textarea id="edit-review-notes" rows="2" class="w-full p-2 text-xs"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 py-4 bg-[#10131E] border-t border-white/10 flex items-center justify-between">
+        <button onclick="closeReviewModal()" class="btn-glass-secondary text-xs py-2 px-4">إلغاء وإغلاق</button>
+        <div class="flex items-center gap-2.5">
+          <button onclick="submitReviewAction('طلب استيضاح')" class="btn-glass-secondary text-xs text-amber-400 font-bold">
+            <i class="fa-solid fa-circle-question"></i> طلب استيضاح
+          </button>
+          <button onclick="submitReviewAction('مرفوض / خارج النطاق')" class="btn-glass-secondary text-xs text-rose-400 font-bold">
+            <i class="fa-solid fa-ban"></i> رفض
+          </button>
+          <button onclick="submitReviewAction('تمت المراجعة والاعتماد')" class="btn-executive-gold text-xs py-2 px-5 font-bold">
+            <i class="fa-solid fa-check"></i> اعتماد المراجعة وإصدار المخرج
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container" class="fixed bottom-10 left-6 z-50 space-y-2 flex flex-col items-start"></div>
+
+  <!-- SCRIPTS -->
+  <script src="/js/samples.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
